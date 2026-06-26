@@ -1,2 +1,4 @@
 # Exclude frontend directory from GitHub language statistics
-frontend/** linguist-detectable=false
+frontend/* linguist-vendored
+frontend/**/* linguist-vendored
+
