@@ -1,4 +1,7 @@
-# Exclude frontend directory from GitHub language statistics
-frontend/* linguist-vendored
-frontend/**/* linguist-vendored
+# Exclude Tailwind CSS boilerplate, landing, and dashboard pages from stats
+# to highlight Python as the dominant AI language while keeping full-stack JS visibility
+frontend/styles/globals.css linguist-vendored
+frontend/pages/index.js linguist-vendored
+frontend/pages/login.js linguist-vendored
+frontend/pages/app/index.js linguist-vendored
 
