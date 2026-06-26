@@ -1,0 +1,62 @@
+
+services:
+  # ── MongoDB ─────────────────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: docint-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # ── Backend (FastAPI) ───────────────────────────────
+  backend:
+    build: ./backend
+    container_name: docint-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DB_NAME=doc_intelligence
+      - LLM_PROVIDER=${LLM_PROVIDER:-openrouter}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data/documents:/app/data/documents
+      - faiss_data:/app/data/faiss_index
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # ── Frontend (Next.js) ─────────────────────────────
+  frontend:
+    build: ./frontend
+    container_name: docint-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  faiss_data:
