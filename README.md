@@ -6,11 +6,14 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Groq](https://img.shields.io/badge/Groq%20LLM-F55036?style=for-the-badge&logoColor=white)](https://groq.com/)
 
-DocIntel AI is a production-grade, high-performance AI-powered document intelligence and analysis platform. It offers a complete ingestion and extraction pipeline — transforming unstructured PDFs, scanned files, and images into structured knowledge through optical character recognition (OCR), semantic text chunking, and vector database indexing. 
+DocIntel AI is a production-ready, full-stack AI Document Intelligence and retrieval-augmented generation (RAG) platform. It allows users to upload complex, unstructured files (such as invoices, contracts, resumes, and reports) and perform real-time extraction, analysis, Q&A, and comparative studies using an intelligent multi-agent orchestration architecture.
 
-Users can interact with documents through voice-activated RAG chat (featuring dynamic confidence levels and smart follow-up suggestions), generate detailed AI reports, compare documents side-by-side, auto-extract entities, and analyze section-by-section sentiment.
+The platform's backend is built with FastAPI and Python, integrating LangChain to coordinate specialized agents (QA, extraction, sentiment, summary, and comparison). Document ingestion is designed as a resilient, asynchronous background pipeline: uploaded files undergo automated OCR (PyMuPDF/Tesseract), semantic chunking, and metadata classification, and are vectorized using SentenceTransformers before being indexed into a local FAISS vector store. The backend also features a multi-provider LLM client with auto-failover capabilities (routing requests between Groq and OpenRouter to prevent rate-limiting or key-expiry downtime) and strict production security assertions.
+
+The frontend is a modern Next.js (React) application. It provides a premium, responsive dashboard featuring a real-time ingestion pipeline tracker (polling document status from MongoDB), an SVG-based statistics donut chart for document distribution, and deep-linked chat routing.
 
 ---
+
 
 ## ⚙️ Core Architecture & Premium Features
 
